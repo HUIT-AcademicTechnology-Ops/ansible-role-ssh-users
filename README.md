@@ -26,6 +26,7 @@ Role Variables
 
 
 The `ssh_users` input list should look like the following:
+```
     ssh_users:
         - name: adminUser
           authorized_keys:
@@ -39,6 +40,7 @@ The `ssh_users` input list should look like the following:
             - orgUser1.pub
             - orgUser3.pub
             - orgUser4.pub
+```
 
 The `authorized_keys` sublist should refer to file names present in the `files` directory of this role.  These files should contain the public ssh/rsa key(s) for the organization user.  It's technically optional.  Also optional is a list of `dirs` that will be created and owned by the unix user specified by the `name` key for each item in the list.
 
