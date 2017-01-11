@@ -12,7 +12,6 @@ Some assumptions are made to simplify the number of role variables required for 
 
 Requirements
 ------------
-
 * Ansible 2.1+
 
 
