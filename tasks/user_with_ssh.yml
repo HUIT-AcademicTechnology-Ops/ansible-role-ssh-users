@@ -1,0 +1,33 @@
+---
+# Create user, group, directory, and authorized_keys
+- name: Make sure group exists with same name as user
+  group:
+    name: "{{ ssh_user.name }}"
+    state: present
+
+- name: Make sure users exist while setting primary group to same name
+  user:
+    name: "{{ ssh_user.name }}"
+    group: "{{ ssh_user.name }}"
+    shell: "{{ ssh_user.login_shell|d(common_ssh_user_login_shell) }}"
+
+- name: Build up set of authorized keys for user
+  set_fact: pubkey_list="{{ lookup('file', 'ssh_public_keys/' + item) }}"
+  register: pubkeys
+  with_items: "{{ item.authorized_keys|d([]) }}"
+
+- set_fact: pubkey_string={{ pubkeys.results | map(attribute='ansible_facts.pubkey_list') | join('\n') }}
+
+- name: Install authorized keys in exclusive mode
+  authorized_key:
+    user: "{{ ssh_user.name }}"
+    key: "{{ pubkey_string }}"
+    exclusive: "yes"
+
+- name: Create directories that should be owned by user
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ssh_user.name }}"
+    group: "{{ ssh_user.name }}"
+  with_items: "{{ ssh_user.dirs|d([]) }}"

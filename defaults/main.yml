@@ -1,0 +1,2 @@
+# ssh_users_file_dir: "{{ playbook_dir }}/public_ssh_keys"
+common_ssh_user_login_shell: "/bin/bash"
