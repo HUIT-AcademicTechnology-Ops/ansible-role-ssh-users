@@ -19,10 +19,10 @@ Requirements
 Role Variables
 --------------
 
-| parameter                     | required | default    | comments                                                            |   |
-|-------------------------------|----------|------------|---------------------------------------------------------------------|---|
-| ssh_users                     | yes      |            | A list of unix users to create, with optional sublists              |   |
-| common_ssh_user_login_shell   | no       | /bin/bash  | The login shell for each unix user created on the remote machine    |   |
+| parameter                     | required | default    | comments                                                            |
+|-------------------------------|----------|------------|---------------------------------------------------------------------|
+| ssh_users                     | yes      |            | A list of unix users to create, with optional sublists              |
+| common_ssh_user_login_shell   | no       | /bin/bash  | The login shell for each unix user created on the remote machine    |
 
 
 The `ssh_users` input list should look like the following:
