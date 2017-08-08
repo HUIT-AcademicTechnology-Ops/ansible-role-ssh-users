@@ -17,6 +17,8 @@
     return_content: yes
   register: github_pubkeys
   with_items: "{{ ssh_user.github_authorized_keys|d([]) }}"
+  # Don't fail if a username is not present in github (404)
+  failed_when: "github_pubkeys.status not in (404, 200)"
   tags: debug
 
 - set_fact: github_pubkeys_string={{ github_pubkeys.results | map(attribute='content') | join }}
