@@ -9,20 +9,26 @@
   user:
     name: "{{ ssh_user.name }}"
     group: "{{ ssh_user.name }}"
-    shell: "{{ ssh_user.login_shell|d(common_ssh_user_login_shell) }}"
+    shell: "{{ ssh_user.login_shell|d(ssh_users_login_shell) }}"
 
-- name: Build up set of authorized keys for user
-  set_fact: pubkey_list="{{ lookup('file', 'ssh_public_keys/' + item) }}"
-  register: pubkeys
-  with_items: "{{ item.authorized_keys|d([]) }}"
+- name: Build up set of authorized keys obtained from a github server
+  uri:
+    url: "https://{{ ssh_users_github_domain }}/{{ item }}.keys"
+    return_content: yes
+  register: github_pubkeys
+  with_items: "{{ ssh_user.github_authorized_keys|d([]) }}"
+  # Don't fail if a username is not present in github (404)
+  failed_when: "github_pubkeys.status not in (404, 200)"
+  tags: debug
 
-- set_fact: pubkey_string={{ pubkeys.results | map(attribute='ansible_facts.pubkey_list') | join('\n') }}
+- set_fact: github_pubkeys_string={{ github_pubkeys.results | map(attribute='content') | join }}
+  tags: debug
 
 - name: Install authorized keys in exclusive mode
   authorized_key:
     user: "{{ ssh_user.name }}"
-    key: "{{ pubkey_string }}"
-    exclusive: "yes"
+    key: "{{ github_pubkeys_string }}"
+    exclusive: True
 
 - name: Create directories that should be owned by user
   file:

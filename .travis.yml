@@ -9,7 +9,7 @@ sudo: false
 
 env:
   - ANSIBLE_VERSION=2.1.0.0
-  - ANSIBLE_VERSION=2.2.0.0
+  - ANSIBLE_VERSION=2.3.1.0  # Latest
 
 install:
   # Install ansible
