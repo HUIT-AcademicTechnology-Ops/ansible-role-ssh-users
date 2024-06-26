@@ -1,7 +1,7 @@
 ---
 # Common tasks for machines that need ssh access
 
-- include: user_with_ssh.yml
+- include_tasks: user_with_ssh.yml
   with_items: "{{ ssh_users }}"
   loop_control:
     loop_var: ssh_user
